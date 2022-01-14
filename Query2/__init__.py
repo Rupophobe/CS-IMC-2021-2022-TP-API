@@ -43,12 +43,24 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             rows = cursor.fetchall()
             for row in rows:
                 dataString += f"SQL: tconst={row[0]}, primaryName={row[1]}\n"
+    except:
+        errorMessage = "Erreur de connexion a la base SQL"
 
+    # if name:
+    #     return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    # else:
+    #     return func.HttpResponse(
+    #          "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+    #          status_code=200
+    #     )
 
     if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+        nameMessage = f"Hello, {name}!\n"
     else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+        nameMessage = "Le parametre 'name' n'a pas ete fourni lors de l'appel.\n"
+    
+    if errorMessage != "":
+        return func.HttpResponse(dataString + nameMessage + errorMessage, status_code=500)
+
+    else:
+        return func.HttpResponse(dataString + nameMessage + " Connexions réussies a Neo4j et SQL!")
