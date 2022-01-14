@@ -54,4 +54,5 @@ jobs:
         scm-do-build-during-deployment: True
         enable-oryx-build: True
 
+
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
