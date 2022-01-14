@@ -49,7 +49,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
                 rows = cursor.fetchall()
                 for row in rows:
-                    dataString += f"SQL: tconst={row[0]}, primaryTitle={row[1]}, averageRating={row[2]}\n"
+                    dataString += f"SQL: tconst={row[0]}, primaryName={row[1]}\n"
 
 
         except:
