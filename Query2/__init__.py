@@ -35,17 +35,28 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     errorMessage = ""
     dataString = ""
     try:
-        logging.info("Test de connexion avec pyodbc...")
-        with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT TOP(10) primaryName FROM tNames WHERE birthYear = 1960")
+        logging.info("Test de connexion avec py2neo...")
+        graph = Graph(neo4j_server, auth=(neo4j_user, neo4j_password))
+        producers = graph.run("MATCH (n:Name)-[:PRODUCED]->(t:Title) WHERE t.primaryTitle CONTAINS 'Spider-Man' RETURN DISTINCT n.nconst, n.primaryName LIMIT 3")
+        for producer in producers:
+            dataString += f"CYPHER: nconst={producer['n.nconst']}, primaryName={producer['n.primaryName']}\n"
 
-            rows = cursor.fetchall()
-            for row in rows:
-                dataString += f"SQL: tconst={row[0]}, primaryName={row[1]}\n"
+        try:
+            logging.info("Test de connexion avec pyodbc...")
+            with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT TOP(10) primaryName FROM [dbo].[tTitles] WHERE birthYear = 1960")
+
+                rows = cursor.fetchall()
+                for row in rows:
+                    dataString += f"SQL: tconst={row[0]}, primaryTitle={row[1]}, averageRating={row[2]}\n"
+
+
+        except:
+            errorMessage = "Erreur de connexion a la base SQL"
     except:
-        errorMessage = "Erreur de connexion a la base SQL"
-
+        errorMessage = "Erreur de connexion a la base Neo4j"
+        
     # if name:
     #     return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
     # else:
