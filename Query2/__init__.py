@@ -45,7 +45,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             logging.info("Test de connexion avec pyodbc...")
             with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT TOP(10) primaryName FROM [dbo].[tNames] WHERE birthYear = 1960")
+                cursor.execute("SELECT TOP(10) tconst, primaryName FROM [dbo].[tNames] WHERE birthYear = 1960")
 
                 rows = cursor.fetchall()
                 for row in rows:
