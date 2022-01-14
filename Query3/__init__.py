@@ -33,7 +33,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
         logging.info("Test de connexion avec py2neo...")
         graph = Graph(neo4j_server, auth=(neo4j_user, neo4j_password))
-        producers = graph.run("MATCH (t1:Title)<-[:acted_in]-(n:Name)-[:acted_in]->(t2:Title) WHERE t1.primaryTitle <> t2.primaryTitle RETURN DISTINCT n.primaryName LIMIT 3")
+        producers = graph.run("MATCH (:Title)<-[a]-(n:Name)-[b]->(:Title) WHERE type(a) <> type(b) RETURN DISTINCT n.primaryName LIMIT 3")
         for producer in producers:
             dataString += f"CYPHER: primaryName={producer['n.primaryName']}\n"
 
