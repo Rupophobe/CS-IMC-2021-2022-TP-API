@@ -42,7 +42,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
             rows = cursor.fetchall()
             for row in rows:
-                dataString += f"SQL: tconst={row[0]}, primaryName={row[1]}\n"
+                dataString += f"SQL: nconst={row[0]}, primaryName={row[1]}\n"
 
     except:
         errorMessage = "Erreur de connexion a la base SQL"
